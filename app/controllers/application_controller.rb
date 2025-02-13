@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::Base
   include DeviseTokenAuth::Concerns::SetUserByToken
 
-  protect_from_forgery with: :null_session
+  protect_from_forgery unless: -> { request.format.json? }
 
   rescue_from ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, ActiveRecord::RecordNotDestroyed,
               ActiveRecord::RecordNotUnique, with: :unprocessable_entity

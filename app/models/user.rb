@@ -4,18 +4,19 @@ require "zip"
 class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
   include DeviseTokenAuth::Concerns::User
 
   has_many_attached :files
 
-  def upload_and_store_file(uploaded_file)
+  def attach_file(uploaded_file)
     blob = upload_blob(uploaded_file)
     attach_blob(blob)
     blob
   end
 
   def encrypt_file(blob)
-    password = generate_password
+    password = SecureRandom.hex(8)
     zip_file_path = create_zip_file(blob)
 
     encrypted_zip_file_path = handle_encryption(zip_file_path, password)
@@ -30,10 +31,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
-  def generate_password
-    SecureRandom.hex(8)
-  end
 
   def create_zip_file(blob)
     zip_file_path = Rails.root.join("tmp", "#{SecureRandom.hex(8)}.zip")

@@ -3,10 +3,10 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
 
-  # GET /users/uploaded_files
+  # GET /users/list_uploaded_files
   # This action retrieves all uploaded files for the current user and returns them in JSON format.
   def list_uploaded_files
-    files = current_user.files || []
+    files = current_user.files
     render json: { files: files.empty? ? [] : format_files(files) }
   end
 
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     uploaded_file = file_upload_params[:file]
     return render_no_file_error unless uploaded_file
 
-    blob = current_user.upload_and_store_file(uploaded_file)
+    blob = current_user.attach_file(uploaded_file)
     result = current_user.encrypt_file(blob)
 
     if result[:error]
