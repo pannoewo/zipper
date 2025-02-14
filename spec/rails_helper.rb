@@ -26,6 +26,14 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 end
 
-def json
+def parsed_response
   JSON.parse(response.body)
+end
+
+def sample_pdf_file
+  Tempfile.open(["test", ".pdf"]) do |file|
+    file.write("PDF content")
+    file.rewind
+    Rack::Test::UploadedFile.new(file.path, "application/pdf")
+  end
 end

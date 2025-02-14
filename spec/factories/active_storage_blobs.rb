@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# spec/factories/active_storage_blobs.rb
-
 FactoryBot.define do
   factory :active_storage_blob, class: "ActiveStorage::Blob" do
     sequence(:filename) { |n| "file#{n}.txt" }
