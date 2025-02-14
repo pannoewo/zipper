@@ -52,9 +52,13 @@ class User < ActiveRecord::Base
 
   def encrypt_zip_file(zip_file_path, password)
     encrypted_zip_file_path = Rails.root.join("tmp", "#{SecureRandom.hex(8)}_encrypted.zip")
-    command = "zip -P #{password} -j #{encrypted_zip_file_path} #{zip_file_path}"
+    escaped_password = Shellwords.escape(password)
+    escaped_zip_file_path = Shellwords.escape(zip_file_path)
+    escaped_encrypted_zip_file_path = Shellwords.escape(encrypted_zip_file_path.to_s)
 
-    _, stderr, status = Open3.capture3(command)
+    command = ["zip", "-P", escaped_password, "-j", escaped_encrypted_zip_file_path, escaped_zip_file_path]
+
+    _, stderr, status = Open3.capture3(*command)
 
     raise StandardError, "Failed to encrypt zip file: #{stderr}" unless status.success?
 
