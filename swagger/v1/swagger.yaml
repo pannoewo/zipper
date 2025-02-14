@@ -1,0 +1,25 @@
+openapi: 3.0.1
+info:
+  title: API V1
+  description: API documentation
+  version: 'v1'
+paths:
+  /users:
+    get:
+      summary: List users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+servers:
+  - url: http://localhost:3000
